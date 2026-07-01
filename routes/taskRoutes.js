@@ -1,0 +1,99 @@
+import express from 'express';
+import { body } from 'express-validator';
+import {
+  getTasks,
+  getTaskById,
+  createTask,
+  updateTask,
+  deleteTask,
+  confirmTask,
+  completeTask,
+  assignTask,
+  autoAssignAll,
+  getMatchPreview,
+  selfAssignTask
+} from '../controllers/taskController.js';
+import { protect } from '../middleware/authMiddleware.js';
+import { authorize } from '../middleware/roleMiddleware.js';
+
+const router = express.Router();
+
+// Validation rules
+const taskValidation = [
+  body('title')
+    .trim()
+    .notEmpty().withMessage('Title is required')
+    .isLength({ max: 100 }).withMessage('Title cannot exceed 100 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 }).withMessage('Description cannot exceed 1000 characters'),
+  body('project')
+    .notEmpty().withMessage('Project ID is required')
+    .isMongoId().withMessage('Invalid project ID'),
+  body('requiredSkills')
+    .optional()
+    .isArray().withMessage('Required skills must be an array of strings'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'critical']).withMessage('Priority must be low, medium, high, or critical'),
+  body('deadline')
+    .optional()
+    .isISO8601().withMessage('Deadline must be a valid date'),
+  body('estimatedHours')
+    .optional()
+    .isFloat({ min: 0.5, max: 160 }).withMessage('Estimated hours must be between 0.5 and 160'),
+  body('difficulty')
+    .optional()
+    .isIn(['easy', 'medium', 'hard', 'expert']).withMessage('Difficulty must be easy, medium, hard, or expert')
+];
+
+const updateTaskValidation = [
+  body('title')
+    .optional()
+    .trim()
+    .isLength({ max: 100 }).withMessage('Title cannot exceed 100 characters'),
+  body('description')
+    .optional()
+    .trim()
+    .isLength({ max: 1000 }).withMessage('Description cannot exceed 1000 characters'),
+  body('requiredSkills')
+    .optional()
+    .isArray().withMessage('Required skills must be an array of strings'),
+  body('priority')
+    .optional()
+    .isIn(['low', 'medium', 'high', 'critical']).withMessage('Priority must be low, medium, high, or critical'),
+  body('status')
+    .optional()
+    .isIn(['pending', 'in-progress', 'completed', 'delayed']).withMessage('Invalid status'),
+  body('deadline')
+    .optional()
+    .isISO8601().withMessage('Deadline must be a valid date'),
+  body('assignedTo')
+    .optional()
+    .isMongoId().withMessage('Invalid user ID')
+];
+
+// All routes require authentication
+router.use(protect);
+
+// Standard CRUD — admin/manager can create/update/delete, all can view (with filtering)
+router.get('/', getTasks);
+router.get('/:id', getTaskById);
+router.post('/', authorize('admin', 'manager'), taskValidation, createTask);
+router.put('/:id', authorize('admin', 'manager'), updateTaskValidation, updateTask);
+router.delete('/:id', authorize('admin', 'manager'), deleteTask);
+
+// Member self-assignment
+router.post('/:id/self-assign', selfAssignTask);
+
+// Member-only actions
+router.put('/:id/confirm', confirmTask);
+router.put('/:id/complete', completeTask);
+
+// AI assignment — admin/manager only
+router.post('/auto-assign-all', authorize('admin', 'manager'), autoAssignAll);
+router.get('/:id/match-preview', authorize('admin', 'manager'), getMatchPreview);
+router.post('/:id/assign', authorize('admin', 'manager'), assignTask);
+
+export default router;
