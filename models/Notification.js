@@ -13,8 +13,8 @@ const notificationSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['delay', 'assignment', 'completion'],
-    default: 'delay'
+    enum: ['project_created', 'task_started', 'task_completed', 'task_assigned', 'member_report', 'team_report', 'delay', 'completion'],
+    default: 'task_assigned'
   },
   read: {
     type: Boolean,
@@ -23,6 +23,14 @@ const notificationSchema = new mongoose.Schema({
   relatedTask: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Task'
+  },
+  relatedProject: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project'
+  },
+  fromUser: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, {
   timestamps: true

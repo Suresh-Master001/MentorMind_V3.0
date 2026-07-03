@@ -57,6 +57,21 @@ const taskSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  workSummary: {
+    type: String,
+    default: '',
+    maxlength: 2000,
+  },
+  wentWell: {
+    type: String,
+    default: '',
+    maxlength: 1000,
+  },
+  blockers: {
+    type: String,
+    default: '',
+    maxlength: 1000,
+  },
   progress: {
     type: Number,
     min: 0,

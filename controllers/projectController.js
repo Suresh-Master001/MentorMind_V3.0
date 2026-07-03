@@ -1,8 +1,10 @@
 import Project from '../models/Project.js';
 import Task from '../models/Task.js';
+import User from '../models/User.js';
 import { generateTasksForProject } from '../services/taskGeneratorService.js';
 import { autoAssignAllTasks } from '../services/aiAssignmentService.js';
 import { validationResult } from 'express-validator';
+import { sendNotification } from '../services/notificationService.js';
 
 // @desc    Get all projects
 // @route   GET /api/projects
@@ -11,8 +13,8 @@ export const getProjects = async (req, res, next) => {
   try {
     let projects;
 
-    // Admins and managers see all projects; members see only projects they are part of
-    if (req.user.role === 'admin' || req.user.role === 'manager') {
+    // Admins and Team Leads see all projects; members see only projects they are part of
+    if (req.user.role === 'admin' || req.user.role === 'Team Lead') {
       projects = await Project.find({})
         .populate('createdBy', 'name email role')
         .populate('members', 'name email role skills');
@@ -57,7 +59,7 @@ export const getProjectById = async (req, res, next) => {
 
 // @desc    Create a project
 // @route   POST /api/projects
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const createProject = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -80,6 +82,19 @@ export const createProject = async (req, res, next) => {
     const populatedProject = await Project.findById(project._id)
       .populate('createdBy', 'name email role')
       .populate('members', 'name email role skills');
+
+    const io = req.app.get('io');
+    if (members && members.length > 0) {
+      for (const memberId of members) {
+        await sendNotification(io, {
+          userId: memberId,
+          message: `${req.user.name} added you to project "${title}"`,
+          type: 'project_created',
+          relatedProject: project._id,
+          fromUser: req.user._id,
+        });
+      }
+    }
 
     try {
       const generatedTasks = await generateTasksForProject(populatedProject);
@@ -179,7 +194,7 @@ export const createProject = async (req, res, next) => {
 
 // @desc    Update a project
 // @route   PUT /api/projects/:id
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const updateProject = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -191,6 +206,10 @@ export const updateProject = async (req, res, next) => {
 
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (req.user.role === 'Team Lead' && project.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'You can only update projects you created' });
     }
 
     const { title, description, members, status, deadline } = req.body;
@@ -215,13 +234,17 @@ export const updateProject = async (req, res, next) => {
 
 // @desc    Delete a project
 // @route   DELETE /api/projects/:id
-// @access  Private (admin, manager)
+// @access  Private (Team Lead)
 export const deleteProject = async (req, res, next) => {
   try {
     const project = await Project.findById(req.params.id);
 
     if (!project) {
       return res.status(404).json({ message: 'Project not found' });
+    }
+
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Only admins can delete projects' });
     }
 
     await project.deleteOne();

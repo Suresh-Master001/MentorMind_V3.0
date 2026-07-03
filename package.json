@@ -1,6 +1,6 @@
 {
-  "name": "mentormind-backend",
-  "version": "1.0.0",
+  "name": "mentormind-v3.0-s",
+  "version": "3.0.0",
   "description": "MentorMind - AI-powered project management backend",
   "main": "server.js",
   "type": "module",

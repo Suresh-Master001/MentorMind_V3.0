@@ -11,6 +11,7 @@ import taskRoutes from './routes/taskRoutes.js';
 import notificationRoutes from './routes/notifications.js';
 import analyticsRoutes from './routes/analytics.js';
 import organizationRoutes from './routes/organizationRoutes.js';
+import reportRoutes from './routes/reports.js';
 import { initCronJobs } from './services/cronService.js';
 
 dotenv.config();
@@ -47,6 +48,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/organizations', organizationRoutes);
+app.use('/api/reports', reportRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
@@ -56,6 +58,17 @@ app.get('/api/health', (req, res) => {
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
+
+  // Join user-specific room for targeted notifications
+  const userId = socket.handshake.auth?.userId;
+  if (userId) {
+    socket.join(`user:${userId}`);
+    console.log(`Socket ${socket.id} joined room user:${userId}`);
+  }
+
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
 });
 
 // Centralized error handling middleware
@@ -99,7 +112,7 @@ const PORT = process.env.PORT || 5001;
 connectDB().then(() => {
   httpServer.listen(PORT, () => {
     console.log(`MentorMind server running on port ${PORT}`);
-    initCronJobs();
+    initCronJobs(io);
   });
 });
 

@@ -3,6 +3,7 @@ import Project from '../models/Project.js';
 import User from '../models/User.js';
 import { validationResult } from 'express-validator';
 import { calculateBestMatch, WORKLOAD_INCREMENT, MAX_WORKLOAD } from '../services/aiAssignmentService.js';
+import { sendNotification } from '../services/notificationService.js';
 
 // @desc    Get all tasks (filtered by project if projectId provided)
 // @route   GET /api/tasks
@@ -87,7 +88,7 @@ export const getTaskById = async (req, res, next) => {
 
 // @desc    Create a task
 // @route   POST /api/tasks
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const createTask = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -132,7 +133,7 @@ export const createTask = async (req, res, next) => {
 
 // @desc    Update a task
 // @route   PUT /api/tasks/:id
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const updateTask = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -144,6 +145,11 @@ export const updateTask = async (req, res, next) => {
 
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
+    }
+
+    const project = await Project.findById(task.project);
+    if (req.user.role === 'Team Lead' && project?.createdBy?.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Team Leads can only edit tasks in projects they created' });
     }
 
     const { title, description, requiredSkills, priority, deadline, status } = req.body;
@@ -170,13 +176,17 @@ export const updateTask = async (req, res, next) => {
 
 // @desc    Delete a task
 // @route   DELETE /api/tasks/:id
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const deleteTask = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
+    }
+
+    if (req.user.role !== 'Team Lead') {
+      return res.status(403).json({ message: 'Only Team Leads can delete tasks' });
     }
 
     await task.deleteOne();
@@ -232,13 +242,15 @@ export const selfAssignTask = async (req, res, next) => {
       .populate('assignedTo', 'name email role skills')
       .populate('createdBy', 'name email role');
 
-    // Socket emit
     const io = req.app.get('io');
-    if (io) {
-      io.to(populatedTask.createdBy?._id?.toString()).emit('notification:new', {
-        message: `Task "${populatedTask.title}" self-assigned by ${req.user.name}`,
-        task: populatedTask,
-        type: 'self-assignment',
+    if (io && populatedTask.createdBy?._id) {
+      await sendNotification(io, {
+        userId: populatedTask.createdBy._id,
+        message: `${req.user.name} accepted task "${populatedTask.title}" in ${populatedTask.project?.title || 'the project'}`,
+        type: 'task_assigned',
+        relatedTask: populatedTask._id,
+        relatedProject: populatedTask.project?._id,
+        fromUser: req.user._id,
       });
     }
 
@@ -259,10 +271,10 @@ export const confirmTask = async (req, res, next) => {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    // Only the assigned member can confirm
+    // Only the assigned member or Team Lead can confirm
     if (
       !task.assignedTo ||
-      task.assignedTo.toString() !== req.user._id.toString()
+      (task.assignedTo.toString() !== req.user._id.toString() && req.user.role !== 'Team Lead')
     ) {
       return res.status(403).json({ message: 'You are not assigned to this task' });
     }
@@ -275,7 +287,6 @@ export const confirmTask = async (req, res, next) => {
       .populate('assignedTo', 'name email role skills')
       .populate('createdBy', 'name email role');
 
-    // Socket emit
     const io = req.app.get('io');
     if (io) {
       io.to(populatedTask.assignedTo?._id?.toString()).emit('task:assigned', {
@@ -284,9 +295,13 @@ export const confirmTask = async (req, res, next) => {
         title: populatedTask.title,
       });
       if (populatedTask.createdBy?._id?.toString() !== populatedTask.assignedTo?._id?.toString()) {
-        io.to(populatedTask.createdBy?._id?.toString()).emit('notification:new', {
-          message: `Task "${populatedTask.title}" confirmed by ${populatedTask.assignedTo?.name}`,
-          task: populatedTask,
+        await sendNotification(io, {
+          userId: populatedTask.createdBy._id,
+          message: `${populatedTask.assignedTo?.name} confirmed and started "${populatedTask.title}"`,
+          type: 'task_started',
+          relatedTask: populatedTask._id,
+          relatedProject: populatedTask.project?._id,
+          fromUser: populatedTask.assignedTo?._id,
         });
       }
     }
@@ -302,21 +317,27 @@ export const confirmTask = async (req, res, next) => {
 // @access  Private (member only — assigned member)
 export const completeTask = async (req, res, next) => {
   try {
+    const { workSummary, actualHours, wentWell, blockers } = req.body;
     const task = await Task.findById(req.params.id);
 
     if (!task) {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    // Only the assigned member can complete
+    // Only the assigned member or Team Lead can complete
     if (
       !task.assignedTo ||
-      task.assignedTo.toString() !== req.user._id.toString()
+      (task.assignedTo.toString() !== req.user._id.toString() && req.user.role !== 'Team Lead')
     ) {
       return res.status(403).json({ message: 'You are not assigned to this task' });
     }
 
     task.status = 'completed';
+    task.actualHours = actualHours ?? task.actualHours;
+    if (workSummary) task.workSummary = workSummary;
+    if (wentWell !== undefined) task.wentWell = wentWell;
+    if (blockers !== undefined) task.blockers = blockers;
+    task.progress = 100;
     await task.save();
 
     const populatedTask = await Task.findById(task._id)
@@ -324,7 +345,6 @@ export const completeTask = async (req, res, next) => {
       .populate('assignedTo', 'name email role skills')
       .populate('createdBy', 'name email role');
 
-    // Socket emit
     const io = req.app.get('io');
     if (io) {
       io.to(populatedTask.assignedTo?._id?.toString()).emit('task:completed', {
@@ -333,9 +353,25 @@ export const completeTask = async (req, res, next) => {
         title: populatedTask.title,
       });
       if (populatedTask.createdBy && populatedTask.createdBy._id.toString() !== populatedTask.assignedTo._id.toString()) {
-        io.to(populatedTask.createdBy._id.toString()).emit('notification:new', {
-          message: `Task "${populatedTask.title}" completed by ${populatedTask.assignedTo?.name}`,
-          task: populatedTask,
+        await sendNotification(io, {
+          userId: populatedTask.createdBy._id,
+          message: `${populatedTask.assignedTo?.name} completed "${populatedTask.title}" — ${task.actualHours || 0}h logged. View work summary.`,
+          type: 'task_completed',
+          relatedTask: populatedTask._id,
+          relatedProject: populatedTask.project?._id,
+          fromUser: populatedTask.assignedTo?._id,
+        });
+      }
+
+      const adminUsers = await User.find({ role: 'admin', organization: req.user.organization }).select('_id');
+      for (const admin of adminUsers) {
+        await sendNotification(io, {
+          userId: admin._id,
+          message: `Task "${populatedTask.title}" in ${populatedTask.project?.title || 'the project'} has been completed by ${populatedTask.assignedTo?.name}`,
+          type: 'task_completed',
+          relatedTask: populatedTask._id,
+          relatedProject: populatedTask.project?._id,
+          fromUser: populatedTask.assignedTo?._id,
         });
       }
     }
@@ -348,7 +384,7 @@ export const completeTask = async (req, res, next) => {
 
 // @desc    AI assign task to the best matching member
 // @route   POST /api/tasks/:id/assign
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const assignTask = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);
@@ -408,7 +444,6 @@ export const assignTask = async (req, res, next) => {
       .populate('assignedTo', 'name email role skills availability currentWorkload')
       .populate('createdBy', 'name email role');
 
-    // Socket emit for assignment
     const io = req.app.get('io');
     if (io) {
       io.to(populatedTask.assignedTo._id.toString()).emit('task:assigned', {
@@ -417,16 +452,24 @@ export const assignTask = async (req, res, next) => {
         title: populatedTask.title,
         assignedTo: populatedTask.assignedTo.name,
       });
-      io.to(populatedTask.assignedTo._id.toString()).emit('notification:new', {
-        message: `You have been assigned to task "${populatedTask.title}"`,
-        task: populatedTask,
-        type: 'assignment',
+
+      await sendNotification(io, {
+        userId: populatedTask.assignedTo._id,
+        message: `You've been assigned "${populatedTask.title}" in ${populatedTask.project?.title || 'the project'}. Please confirm to start.`,
+        type: 'task_assigned',
+        relatedTask: populatedTask._id,
+        relatedProject: populatedTask.project?._id,
+        fromUser: populatedTask.createdBy?._id,
       });
+
       if (populatedTask.createdBy && populatedTask.createdBy._id.toString() !== populatedTask.assignedTo._id.toString()) {
-        io.to(populatedTask.createdBy._id.toString()).emit('notification:new', {
-          message: `Task "${populatedTask.title}" assigned to ${populatedTask.assignedTo.name}`,
-          task: populatedTask,
-          type: 'assignment',
+        await sendNotification(io, {
+          userId: populatedTask.createdBy._id,
+          message: `${populatedTask.assignedTo.name} was auto-assigned "${populatedTask.title}"`,
+          type: 'task_assigned',
+          relatedTask: populatedTask._id,
+          relatedProject: populatedTask.project?._id,
+          fromUser: populatedTask.assignedTo._id,
         });
       }
     }
@@ -443,7 +486,7 @@ export const assignTask = async (req, res, next) => {
 
 // @desc    Auto-assign all unassigned tasks in a project (batch mode)
 // @route   POST /api/tasks/auto-assign-all
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const autoAssignAll = async (req, res, next) => {
   try {
     const { projectId } = req.body;
@@ -519,7 +562,6 @@ export const autoAssignAll = async (req, res, next) => {
         .populate('assignedTo', 'name email role skills')
         .populate('createdBy', 'name email role');
 
-      // Socket emit for auto-assign
       const io = req.app.get('io');
       if (io) {
         io.to(result.bestUser._id.toString()).emit('task:assigned', {
@@ -528,11 +570,26 @@ export const autoAssignAll = async (req, res, next) => {
           title: task.title,
           assignedTo: result.bestUser.name,
         });
-        io.to(result.bestUser._id.toString()).emit('notification:new', {
-          message: `You have been auto-assigned to task "${task.title}"`,
-          task: populatedTask,
-          type: 'assignment',
+
+        await sendNotification(io, {
+          userId: result.bestUser._id,
+          message: `You've been assigned "${task.title}" in ${populatedTask.project?.title || 'the project'}. Please confirm to start.`,
+          type: 'task_assigned',
+          relatedTask: populatedTask._id,
+          relatedProject: populatedTask.project?._id,
+          fromUser: populatedTask.createdBy?._id,
         });
+
+        if (populatedTask.createdBy && populatedTask.createdBy._id.toString() !== result.bestUser._id.toString()) {
+          await sendNotification(io, {
+            userId: populatedTask.createdBy._id,
+            message: `${result.bestUser.name} was auto-assigned "${task.title}"`,
+            type: 'task_assigned',
+            relatedTask: populatedTask._id,
+            relatedProject: populatedTask.project?._id,
+            fromUser: result.bestUser._id,
+          });
+        }
       }
 
       assignments.push({
@@ -563,7 +620,7 @@ export const autoAssignAll = async (req, res, next) => {
 
 // @desc    Get match scores for ALL eligible members (not just the winner)
 // @route   GET /api/tasks/:id/match-preview
-// @access  Private (admin, manager)
+// @access  Private (admin, Team Lead)
 export const getMatchPreview = async (req, res, next) => {
   try {
     const task = await Task.findById(req.params.id);

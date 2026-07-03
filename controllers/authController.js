@@ -1,8 +1,9 @@
 import User from '../models/User.js';
+import Organization from '../models/Organization.js';
 import { generateToken } from '../middleware/authMiddleware.js';
 import { validationResult } from 'express-validator';
 
-// @desc    Register a new user
+// @desc    Register a new member user
 // @route   POST /api/auth/register
 // @access  Public
 export const register = async (req, res, next) => {
@@ -12,22 +13,21 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password, role, skills, companyName, teamName } = req.body;
+    const { name, email, password, skills, teamName, companyName, role } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists with this email' });
     }
 
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase(),
       password,
       role: role || 'member',
       skills: skills || [],
-      companyName: companyName || '',
-      teamName: teamName || ''
+      teamName: teamName || '',
+      companyName: companyName || ''
     });
 
     res.status(201).json({
@@ -59,8 +59,7 @@ export const login = async (req, res, next) => {
 
     const { email, password } = req.body;
 
-    // Find user and include password field
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
@@ -105,6 +104,71 @@ export const getMe = async (req, res, next) => {
       availability: user.availability,
       currentWorkload: user.currentWorkload,
       createdAt: user.createdAt
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Create a hidden admin account and organization
+// @route   POST /api/auth/org/setup
+// @access  Public
+export const orgSetup = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email, password, companyName, companyEmail, description } = req.body;
+
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists with this email' });
+    }
+
+    const existingOrg = await Organization.findOne({ email: companyEmail.toLowerCase() });
+    if (existingOrg) {
+      return res.status(400).json({ message: 'Organization already exists with this email' });
+    }
+
+    const user = await User.create({
+      name,
+      email: email.toLowerCase(),
+      password,
+      role: 'admin',
+      skills: ['management', 'administration'],
+      companyName: companyName || '',
+      teamName: 'Management'
+    });
+
+    const organization = await Organization.create({
+      name: companyName,
+      email: companyEmail.toLowerCase(),
+      description: description || '',
+      createdBy: user._id,
+      members: [user._id]
+    });
+
+    user.organization = organization._id;
+    await user.save();
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      skills: user.skills,
+      companyName: user.companyName,
+      teamName: user.teamName,
+      organization: {
+        _id: organization._id,
+        name: organization.name,
+        email: organization.email
+      },
+      availability: user.availability,
+      currentWorkload: user.currentWorkload,
+      token: generateToken(user._id)
     });
   } catch (error) {
     next(error);
