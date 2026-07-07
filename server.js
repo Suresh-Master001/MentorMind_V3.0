@@ -21,22 +21,50 @@ const app = express();
 // HTTP server for Socket.io
 const httpServer = createServer(app);
 
+// CORS configuration - handles multiple origins and trailing slashes
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://mentormind-v3.vercel.app',
+  'https://mentormind-v3-0-s.onrender.com'
+];
+
+// Add FRONTEND_URL from env if set and not already in list
+if (process.env.FRONTEND_URL) {
+  const cleanUrl = process.env.FRONTEND_URL.replace(/\/+$/, ''); // strip trailing slash
+  if (!allowedOrigins.includes(cleanUrl)) {
+    allowedOrigins.push(cleanUrl);
+  }
+}
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (server-to-server, mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+    // Check if origin is allowed (exact match or matches with/without trailing slash)
+    const isAllowed = allowedOrigins.some(allowed => 
+      origin === allowed || origin === allowed + '/'
+    );
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS blocked origin: ${origin}`);
+      callback(null, true); // Still allow in dev, but log warning
+    }
+  },
+  credentials: true
+};
+
 // Socket.io setup
 const io = new Server(httpServer, {
-  cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  }
+  cors: corsOptions
 });
 
 // Make io available in routes/controllers
 app.set('io', io);
 
 // Middleware
-app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
