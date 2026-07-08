@@ -234,7 +234,7 @@ export const updateProject = async (req, res, next) => {
 
 // @desc    Delete a project
 // @route   DELETE /api/projects/:id
-// @access  Private (Team Lead)
+// @access  Private (admin, Team Lead)
 export const deleteProject = async (req, res, next) => {
   try {
     const project = await Project.findById(req.params.id);
@@ -243,13 +243,17 @@ export const deleteProject = async (req, res, next) => {
       return res.status(404).json({ message: 'Project not found' });
     }
 
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Only admins can delete projects' });
+    // Admins can delete any project; Team Leads can only delete their own
+    if (req.user.role === 'Team Lead' && project.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Team Leads can only delete projects they created' });
     }
+
+    // Delete all tasks associated with this project
+    await Task.deleteMany({ project: project._id });
 
     await project.deleteOne();
 
-    res.json({ message: 'Project removed successfully' });
+    res.json({ message: 'Project and all associated tasks removed successfully' });
   } catch (error) {
     next(error);
   }

@@ -24,9 +24,7 @@ const httpServer = createServer(app);
 // CORS configuration - handles multiple origins and trailing slashes
 const allowedOrigins = [
   'http://localhost:5173',
-  'http://localhost:3000',
   'https://mentormind-v3.vercel.app',
-  'https://mentormind-v3-0-s.onrender.com'
 ];
 
 // Add FRONTEND_URL from env if set and not already in list

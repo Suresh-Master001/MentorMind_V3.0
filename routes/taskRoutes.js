@@ -79,22 +79,24 @@ router.use(protect);
 
 // Standard CRUD — admins/Team Leads can create/update, admins can delete, all can view (with filtering)
 router.get('/', getTasks);
-router.get('/:id', getTaskById);
-router.post('/', authorize('Team Lead'), taskValidation, createTask);
-router.put('/:id', authorize('Team Lead'), updateTaskValidation, updateTask);
-router.delete('/:id', authorize('Team Lead'), deleteTask);
-router.delete('/:id', authorize('admin'), deleteTask);
 
-// Member self-assignment
+// AI assignment — Team Lead/Admin only
+router.post('/auto-assign-all', authorize('Team Lead', 'admin'), autoAssignAll);
+
+router.get('/:id', getTaskById);
+router.post('/', authorize('Team Lead', 'admin'), taskValidation, createTask);
+router.put('/:id', authorize('Team Lead', 'admin'), updateTaskValidation, updateTask);
+router.delete('/:id', authorize('Team Lead', 'admin'), deleteTask);
+
+// Member self-assignment (only members can self-accept tasks)
 router.post('/:id/self-assign', authorize('member'), selfAssignTask);
 
-// Confirm/Complete — assigned members and Team Leads can do this (controller verifies assignment)
+// Confirm/Complete — assigned members and Team Leads/Admin can do this (controller verifies assignment)
 router.put('/:id/confirm', confirmTask);
 router.put('/:id/complete', completeTask);
 
-// AI assignment — Team Lead only
-router.post('/auto-assign-all', authorize('Team Lead'), autoAssignAll);
-router.get('/:id/match-preview', authorize('Team Lead'), getMatchPreview);
-router.post('/:id/assign', authorize('Team Lead'), assignTask);
+// AI assignment — Team Lead/Admin only
+router.get('/:id/match-preview', authorize('Team Lead', 'admin'), getMatchPreview);
+router.post('/:id/assign', authorize('Team Lead', 'admin'), assignTask);
 
 export default router;

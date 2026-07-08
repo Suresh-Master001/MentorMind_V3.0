@@ -185,8 +185,9 @@ export const deleteTask = async (req, res, next) => {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    if (req.user.role !== 'Team Lead') {
-      return res.status(403).json({ message: 'Only Team Leads can delete tasks' });
+    // Both admin and Team Lead can delete tasks
+    if (req.user.role !== 'admin' && req.user.role !== 'Team Lead') {
+      return res.status(403).json({ message: 'Not authorized to delete tasks' });
     }
 
     await task.deleteOne();

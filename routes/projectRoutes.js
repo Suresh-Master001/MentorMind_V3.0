@@ -57,9 +57,9 @@ router.use(protect);
 router.get('/', getProjects);
 router.get('/:id', getProjectById);
 
-// Team Lead only routes for project management
-router.post('/', authorize('Team Lead'), projectValidation, createProject);
-router.put('/:id', authorize('Team Lead'), updateValidation, updateProject);
-router.delete('/:id', authorize('Team Lead'), deleteProject);
+// Admin and Team Lead routes for project management
+router.post('/', authorize('admin', 'Team Lead'), projectValidation, createProject);
+router.put('/:id', authorize('admin', 'Team Lead'), updateValidation, updateProject);
+router.delete('/:id', authorize('admin', 'Team Lead'), deleteProject);
 
 export default router;
