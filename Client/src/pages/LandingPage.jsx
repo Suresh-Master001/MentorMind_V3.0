@@ -30,7 +30,7 @@ const features = [
     icon: Brain,
     title: "AI-Powered Task Assignment",
     description:
-      "Gemini AI intelligently scores and assigns tasks based on team members' skills, availability, workload, and time capacity — ensuring the right person gets the right task.",
+      "Gemini AI intelligently scores and assigns tasks based on team members' skills, availability, workload and time capacity - ensuring the right person gets the right task.",
     gradient: "from-purple-500 to-pink-500",
     shadow: "shadow-purple-500/20",
   },
@@ -38,7 +38,7 @@ const features = [
     icon: Sparkles,
     title: "Smart Task Generation",
     description:
-      "Describe your project once, and our AI generates 6-12 detailed technical tasks with realistic estimates, required skills, and priority levels automatically.",
+      "Describe your project once and our AI generates 6-12 detailed technical tasks with realistic estimates, required skills and priority levels automatically.",
     gradient: "from-purple-500 to-pink-500",
     shadow: "shadow-purple-500/20",
   },
@@ -46,7 +46,7 @@ const features = [
     icon: Bell,
     title: "Real-Time Notifications",
     description:
-      "Stay updated with instant Socket.io-powered notifications for task assignments, completions, delays, and team updates — no page refresh needed.",
+      "Stay updated with instant Socket.io-powered notifications for task assignments, completions, delays and team updates - no page refresh needed.",
     gradient: "from-purple-500 to-pink-500",
     shadow: "shadow-purple-500/20",
   },
@@ -54,7 +54,7 @@ const features = [
     icon: BarChart3,
     title: "Advanced Analytics & Reports",
     description:
-      "Comprehensive dashboards with interactive charts, team performance metrics, project status tracking, and monthly trend analysis to make data-driven decisions.",
+      "Comprehensive dashboards with interactive charts, team performance metrics, project status tracking and monthly trend analysis to make data-driven decisions.",
     gradient: "from-purple-500 to-pink-500",
     shadow: "shadow-purple-500/20",
   },
@@ -62,7 +62,7 @@ const features = [
     icon: Users,
     title: "Role-Based Collaboration",
     description:
-      "Granular access control with Admin, Team Lead, and Member roles. Each role has tailored views and permissions for secure, focused collaboration.",
+      "Granular access control with Admin, Team Lead and Member roles. Each role has tailored views and permissions for secure, focused collaboration.",
     gradient: "from-purple-500 to-pink-500",
     shadow: "shadow-purple-500/20",
   },
@@ -70,7 +70,7 @@ const features = [
     icon: Clock,
     title: "Automated Delay Detection",
     description:
-      "Cron-based monitoring automatically detects overdue tasks, sends delay notifications, and keeps project timelines on track without manual oversight.",
+      "Cron-based monitoring automatically detects overdue tasks, sends delay notifications and keeps project timelines on track without manual oversight.",
     gradient: "from-purple-500 to-pink-500",
     shadow: "shadow-purple-500/20",
   },
@@ -81,7 +81,7 @@ const howItWorks = [
     step: "01",
     title: "Create Your Organization",
     description:
-      "Register as an admin, set up your organization, and invite team members with specific roles and skill profiles.",
+      "Register as an admin, set up your organization and invite team members with specific roles and skill profiles.",
     icon: Globe,
   },
   {
@@ -95,21 +95,21 @@ const howItWorks = [
     step: "03",
     title: "AI Auto-Assigns Tasks",
     description:
-      "Our scoring engine evaluates every team member's skills, availability, and capacity to assign tasks to the best-fit person automatically.",
+      "Our scoring engine evaluates every team member's skills, availability and capacity to assign tasks to the best-fit person automatically.",
     icon: Cpu,
   },
   {
     step: "04",
     title: "Track & Collaborate",
     description:
-      "Team members confirm, work on, and complete tasks with real-time progress tracking, work logs, and instant notifications.",
+      "Team members confirm, work on and complete tasks with real-time progress tracking, work logs and instant notifications.",
     icon: LineChart,
   },
   {
     step: "05",
     title: "Analyze & Optimize",
     description:
-      "View detailed analytics, team reports, and project insights. Identify bottlenecks and optimize resource allocation continuously.",
+      "View detailed analytics, team reports and project insights. Identify bottlenecks and optimize resource allocation continuously.",
     icon: Target,
   },
 ];
@@ -157,23 +157,23 @@ const testimonials = [
 const faqs = [
   {
     q: "How does the AI task assignment work?",
-    a: "Our AI scoring engine evaluates team members across four weighted factors: skill match (40%), time capacity (25%), low workload (20%), and availability (15%). The highest-scoring member with matching skills gets assigned automatically.",
+    a: "Our AI scoring engine evaluates team members across four weighted factors: skill match (40%), time capacity (25%), low workload (20%) and availability (15%). The highest-scoring member with matching skills gets assigned automatically.",
   },
   {
     q: "Can I customize the AI-generated tasks?",
-    a: "Absolutely! AI-generated tasks are fully editable. You can modify titles, descriptions, priorities, deadlines, and reassign tasks manually at any time.",
+    a: "Absolutely! AI-generated tasks are fully editable. You can modify titles, descriptions, priorities, deadlines and reassign tasks manually at any time.",
   },
   {
     q: "Is my data secure?",
-    a: "Yes. We use JWT-based authentication with role-based access control. All passwords are hashed with bcrypt, and your data is stored securely in MongoDB.",
+    a: "Yes. We use JWT-based authentication with role-based access control. All passwords are hashed with bcrypt and your data is stored securely in MongoDB.",
   },
   {
     q: "What roles are available?",
-    a: "MentorMind supports three roles: Admin (full access), Team Lead (project and task management), and Member (task execution and self-assignment).",
+    a: "MentorMind supports three roles: Admin (full access), Team Lead (project and task management) and Member (task execution and self-assignment).",
   },
   {
     q: "Does it integrate with other tools?",
-    a: "Currently, MentorMind is a standalone platform. We're planning API integrations with Slack, Jira, and GitHub for future releases.",
+    a: "Currently, MentorMind is a standalone platform. We're planning API integrations with Slack, Jira and GitHub for future releases.",
   },
 ];
 
@@ -351,17 +351,14 @@ export default function LandingPage() {
 
       {/* ===== HERO SECTION ===== */}
       <section className="relative pt-24 pb-16 overflow-hidden">
-        {/* Matching gradient shadow background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-gray-100 to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900" />
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-200/40 via-transparent to-pink-200/50 dark:from-purple-900/20 dark:to-pink-900/20" />
-        <div className="absolute inset-0 opacity-30 dark:opacity-10" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(168, 85, 247, 0.3) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
-        {/* Gradient orbs - enhanced for more glow */}
-        <div className="absolute top-1/4 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-purple-400/30 to-purple-600/20 rounded-full blur-[160px]" />
-        <div className="absolute top-1/3 -right-48 w-[28rem] h-[28rem] bg-gradient-to-bl from-pink-400/30 to-pink-600/20 rounded-full blur-[160px]" />
-        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-gradient-to-t from-purple-300/20 to-pink-300/10 rounded-full blur-[120px] dark:from-purple-700/20 dark:to-pink-700/10" />
-        {/* Additional subtle glow edges */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-pink-400/50 to-transparent" />
+        {/* Lighter gradient shadow background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 via-white to-pink-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900" />
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-100/20 via-white/50 to-pink-100/20 dark:from-purple-900/10 dark:to-pink-900/10" />
+        <div className="absolute inset-0 opacity-20 dark:opacity-10" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(168, 85, 247, 0.2) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
+        {/* Gradient orbs - lighter for softer glow */}
+        <div className="absolute top-1/4 -left-48 w-[32rem] h-[32rem] bg-gradient-to-br from-purple-300/20 to-purple-500/10 rounded-full blur-[160px]" />
+        <div className="absolute top-1/3 -right-48 w-[28rem] h-[28rem] bg-gradient-to-bl from-pink-300/20 to-pink-500/10 rounded-full blur-[160px]" />
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-gradient-to-t from-purple-200/10 to-pink-200/5 rounded-full blur-[120px] dark:from-purple-700/10 dark:to-pink-700/5" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center min-h-[calc(100vh-8rem)]">
@@ -383,7 +380,7 @@ export default function LandingPage() {
 
               <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-xl leading-relaxed">
                 MentorMind leverages Google Gemini AI to automatically generate,
-                assign, and track tasks — transforming how your team
+                assign and track tasks - transforming how your team
                 collaborates and delivers projects.
               </p>
 
@@ -895,7 +892,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
               Join 500+ teams already using MentorMind to deliver projects
-              faster with the power of AI. Get started free — no credit card
+              faster with the power of AI. Get started free - no credit card
               required.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
@@ -931,7 +928,7 @@ export default function LandingPage() {
               </Link>
               <p className="text-sm text-gray-500 dark:text-gray-400 max-w-sm">
                 AI-powered project management platform that helps teams
-                collaborate smarter, deliver faster, and achieve more.
+                collaborate smarter, deliver faster and achieve more.
               </p>
             </div>
 
