@@ -273,7 +273,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 group">
-              <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-9 w-auto" />
+              <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-11 w-auto" />
               <span className="text-xl font-bold">
                 <span className="text-white">Mentor</span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
@@ -453,7 +453,7 @@ export default function LandingPage() {
                   {/* Card header */}
                   <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                      <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-8 w-auto rounded-lg" />
+                      <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-10 w-auto rounded-lg" />
                       <div>
                         <div className="text-sm font-semibold text-white">
                           Project Alpha
@@ -951,7 +951,7 @@ export default function LandingPage() {
             {/* Brand */}
             <div className="md:col-span-2">
               <Link to="/" className="flex items-center gap-2.5 mb-4">
-                <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-8 w-auto rounded-xl" />
+                <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-10 w-auto rounded-xl" />
                 <span className="text-lg font-bold">
                   <span className="text-white">Mentor</span>
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">

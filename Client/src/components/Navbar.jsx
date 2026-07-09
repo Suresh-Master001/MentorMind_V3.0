@@ -12,7 +12,7 @@ import NotificationBell from "./NotificationBell";
 
 const Logo = () => (
   <div className="flex items-center gap-2">
-    <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-8 w-auto" />
+    <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-10 w-auto" />
     <span className="text-xl font-bold bg-gradient-to-r from-purple-600 via-pink-500 to-purple-600 bg-clip-text text-transparent hidden sm:block">
       MentorMind 3.0
     </span>
