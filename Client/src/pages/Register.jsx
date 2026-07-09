@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { UserPlus, Mail, Lock, User as UserIcon, X, Plus, Users, Building2, Shield, Sparkles, ChevronDown } from "lucide-react";
+import { UserPlus, Mail, Lock, User as UserIcon, X, Plus, Users, Building2, Shield, Sparkles, ChevronDown, Check } from "lucide-react";
 
 const Logo = () => (
   <div className="flex items-center justify-center gap-3 mb-2">
@@ -28,6 +28,7 @@ const Register = () => {
   const [skills, setSkills] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [roleOpen, setRoleOpen] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -178,18 +179,57 @@ const Register = () => {
               <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
                 Your Role
               </label>
-              <div className="relative group">
-                <Shield className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors z-10" />
-                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-purple-500 transition-colors z-10 pointer-events-none" />
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="relative w-full pl-11 pr-10 py-3.5 bg-gray-50/80 dark:bg-gray-700/80 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 dark:focus:border-purple-500 transition-all appearance-none cursor-pointer"
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setRoleOpen(!roleOpen)}
+                  className="relative w-full flex items-center gap-3 pl-11 pr-10 py-3.5 bg-gray-50/80 dark:bg-gray-700/80 border-2 border-gray-200 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 rounded-xl text-sm text-left transition-all"
                 >
-                  <option value="member">Team Member</option>
-                  <option value="Team Lead">Team Lead</option>
-                  <option value="admin">Administrator</option>
-                </select>
+                  <Shield className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-500 z-10" />
+                  <span className="flex-1 dark:text-white">
+                    {role === "admin" ? "Administrator" : role === "Team Lead" ? "Team Lead" : "Team Member"}
+                  </span>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 dark:text-gray-500 transition-transform duration-200 ${roleOpen ? 'rotate-180 text-purple-500' : ''}`} />
+                </button>
+
+                {/* Custom Dropdown Menu */}
+                {roleOpen && (
+                  <div className="absolute z-50 w-full mt-2 bg-white/95 dark:bg-gray-800/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-purple-500/20 border border-gray-100 dark:border-gray-700 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                    {[
+                      { value: "member", label: "Team Member", desc: "View and work on assigned tasks", icon: Users, gradient: "from-blue-500 to-cyan-500" },
+                      { value: "Team Lead", label: "Team Lead", desc: "Manage projects and tasks", icon: Shield, gradient: "from-purple-500 to-pink-500" },
+                      { value: "admin", label: "Administrator", desc: "Full system access", icon: Shield, gradient: "from-orange-500 to-red-500" },
+                    ].map((option) => {
+                      const Icon = option.icon;
+                      const isSelected = role === option.value;
+                      return (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => { setRole(option.value); setRoleOpen(false); }}
+                          className={`w-full flex items-center gap-3 px-4 py-3.5 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors ${isSelected ? 'bg-purple-50/80 dark:bg-purple-900/30' : ''}`}
+                        >
+                          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${option.gradient} flex items-center justify-center shrink-0 shadow-lg`}>
+                            <Icon className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1 text-left">
+                            <div className={`text-sm font-semibold ${isSelected ? 'text-purple-700 dark:text-purple-300' : 'text-gray-700 dark:text-gray-300'}`}>
+                              {option.label}
+                            </div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              {option.desc}
+                            </div>
+                          </div>
+                          {isSelected && (
+                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0">
+                              <Check className="w-3.5 h-3.5 text-white" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
                 {role === "admin" ? "Full system access" : role === "Team Lead" ? "Can manage projects and tasks" : "Can view and work on assigned tasks"}
