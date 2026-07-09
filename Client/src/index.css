@@ -5,6 +5,55 @@
 	--glass-dark: rgba(15, 23, 42, 0.6);
 }
 
+/* ==================== GLOBAL FONT ==================== */
+/* 
+   CAVOLINI FONT SETUP:
+   To enable Cavolini font, place these font files in Client/public/fonts/:
+   - Cavolini.woff2 (regular)
+   - Cavolini-Bold.woff2 (bold)
+   - Cavolini-ExtraBold.woff2 (extra bold)
+   - Cavolini-Black.woff2 (black)
+
+   Then uncomment the @font-face blocks below.
+   
+   @font-face {
+       font-family: 'Cavolini';
+       src: url('/fonts/Cavolini.woff2') format('woff2');
+       font-weight: 400;
+       font-display: swap;
+   }
+   
+   @font-face {
+       font-family: 'Cavolini';
+       src: url('/fonts/Cavolini-Bold.woff2') format('woff2');
+       font-weight: 700;
+       font-display: swap;
+   }
+   
+   @font-face {
+       font-family: 'Cavolini';
+       src: url('/fonts/Cavolini-ExtraBold.woff2') format('woff2');
+       font-weight: 800;
+       font-display: swap;
+   }
+   
+   @font-face {
+       font-family: 'Cavolini';
+       src: url('/fonts/Cavolini-Black.woff2') format('woff2');
+       font-weight: 900;
+       font-display: swap;
+   }
+*/
+
+/* Make all text slightly bolder globally */
+body {
+	font-weight: 500;
+}
+
+h1, h2, h3, h4, h5, h6, strong, b, th, label, button, .font-bold, .font-semibold, .font-medium {
+	font-weight: 700;
+}
+
 /* ==================== ANIMATIONS ==================== */
 
 /* Animated gradient background utility */
