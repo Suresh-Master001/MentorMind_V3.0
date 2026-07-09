@@ -255,7 +255,7 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* ===== NAVBAR ===== */}
       <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -352,7 +352,7 @@ export default function LandingPage() {
       {/* ===== HERO SECTION ===== */}
       <section className="relative pt-24 pb-16 overflow-hidden">
         {/* Matching gradient shadow background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50 via-gray-100 to-pink-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900" />
         <div className="absolute inset-0 bg-gradient-to-r from-purple-200/40 via-transparent to-pink-200/50 dark:from-purple-900/20 dark:to-pink-900/20" />
         <div className="absolute inset-0 opacity-30 dark:opacity-10" style={{ backgroundImage: "radial-gradient(circle at 1px 1px, rgba(168, 85, 247, 0.3) 1px, transparent 0)", backgroundSize: "40px 40px" }} />
         {/* Gradient orbs - enhanced for more glow */}
@@ -574,7 +574,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FEATURES SECTION ===== */}
-      <section id="features" className="relative py-24 lg:py-32 bg-white dark:bg-gray-900">
+      <section id="features" className="relative py-24 lg:py-32 bg-gray-100 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section header */}
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -623,7 +623,7 @@ export default function LandingPage() {
       {/* ===== HOW IT WORKS ===== */}
       <section
         id="how-it-works"
-        className="relative py-24 lg:py-32 bg-gray-50 dark:bg-gray-800/50 overflow-hidden"
+        className="relative py-24 lg:py-32 bg-white dark:bg-gray-800/50 overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-r from-purple-100/30 via-transparent to-pink-100/30 dark:from-purple-900/10 dark:to-pink-900/10" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -677,7 +677,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="relative py-24 lg:py-32 bg-white dark:bg-gray-900">
+      <section className="relative py-24 lg:py-32 bg-gray-100 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-sm mb-6">
@@ -750,7 +750,7 @@ export default function LandingPage() {
       {/* ===== PRICING ===== */}
       <section
         id="pricing"
-        className="relative py-24 lg:py-32 bg-gray-50 dark:bg-gray-800/50"
+        className="relative py-24 lg:py-32 bg-gray-100 dark:bg-gray-800/50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -830,7 +830,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FAQ ===== */}
-      <section id="faq" className="relative py-24 lg:py-32 bg-white dark:bg-gray-900">
+      <section id="faq" className="relative py-24 lg:py-32 bg-gray-100 dark:bg-gray-900">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300 text-sm mb-6">
@@ -880,7 +880,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== CTA SECTION ===== */}
-      <section className="relative py-24 lg:py-32 bg-gray-50 dark:bg-gray-800/50">
+      <section className="relative py-24 lg:py-32 bg-gray-100 dark:bg-gray-800/50">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-purple-50/50 to-transparent dark:via-purple-900/10" />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="rounded-3xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl p-8 md:p-16">
