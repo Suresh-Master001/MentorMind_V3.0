@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Building2, Mail, User as UserIcon, FileText } from "lucide-react";
 
 const Logo = () => (
-  <img src="/logo.png" alt="MentorMind 3.0" className="h-16 w-auto mx-auto mb-2" />
+  <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-16 w-auto mx-auto mb-2" />
 );
 
 const OrganizationRegister = () => {

@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { UserPlus, Mail, Lock, User as UserIcon, Building2, Shield, Users } from "lucide-react";
 
 const Logo = () => (
-  <img src="/logo.png" alt="MentorMind 3.0" className="h-20 w-auto mx-auto mb-4" />
+  <img src="/MentorMind_Logo.png" alt="MentorMind 3.0" className="h-20 w-auto mx-auto mb-4" />
 );
 
 const AdminRegister = () => {
