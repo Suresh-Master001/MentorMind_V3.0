@@ -1,0 +1,525 @@
+@import "tailwindcss";
+
+:root {
+	--glass: rgba(255,255,255,0.6);
+	--glass-dark: rgba(15, 23, 42, 0.6);
+}
+
+/* ==================== ANIMATIONS ==================== */
+
+/* Animated gradient background utility */
+.bg-animated-gradient {
+	background: linear-gradient(90deg, rgba(53,120,255,0.12), rgba(139,92,246,0.06), rgba(53,120,255,0.08));
+	background-size: 200% 200%;
+	animation: gradient-x 8s linear infinite;
+}
+
+/* Animated gradient - full page */
+.bg-animated-gradient-full {
+	background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+
+/* Soft floating */
+.float-y { animation: float 4s ease-in-out infinite; }
+.float-x { animation: float-x 4s ease-in-out infinite; }
+.float-rotate { animation: float-rotate 6s ease-in-out infinite; }
+
+@keyframes float {
+	0%, 100% { transform: translateY(0); }
+	50% { transform: translateY(-10px); }
+}
+
+@keyframes float-x {
+	0%, 100% { transform: translateX(0); }
+	50% { transform: translateX(10px); }
+}
+
+@keyframes float-rotate {
+	0%, 100% { transform: translateY(0) rotate(0deg); }
+	50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* Pulse glow animation */
+.pulse-glow {
+	animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+	0%, 100% { box-shadow: 0 0 5px rgba(59, 130, 246, 0.3); }
+	50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.6); }
+}
+
+/* Gradient text */
+.text-gradient {
+	background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-blue {
+	background: linear-gradient(90deg, #3b82f6, #06b6d4);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.text-gradient-purple {
+	background: linear-gradient(90deg, #8b5cf6, #d946ef);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+/* ==================== GLASSMORPHISM ==================== */
+
+.glass {
+	background: rgba(255, 255, 255, 0.7);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+	background: rgba(15, 23, 42, 0.7);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-light {
+	background: rgba(255, 255, 255, 0.5);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== GRADIENT BACKGROUNDS ==================== */
+
+.bg-gradient-primary {
+	background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+}
+
+.bg-gradient-success {
+	background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.bg-gradient-danger {
+	background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.bg-gradient-warning {
+	background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.bg-gradient-purple {
+	background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+}
+
+.bg-gradient-blue-cyan {
+	background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+}
+
+.bg-gradient-pink-orange {
+	background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+}
+
+/* Gradient borders */
+.border-gradient-primary {
+	border: 2px solid transparent;
+	background: linear-gradient(white, white) padding-box,
+		linear-gradient(135deg, #3b82f6, #8b5cf6) border-box;
+}
+
+.border-gradient-purple {
+	border: 2px solid transparent;
+	background: linear-gradient(white, white) padding-box,
+		linear-gradient(135deg, #8b5cf6, #d946ef) border-box;
+}
+
+/* ==================== SHADOWS & GLOWS ==================== */
+
+.shadow-glow {
+	box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.shadow-glow-lg {
+	box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+}
+
+.shadow-glow-accent {
+	box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.shadow-glow-success {
+	box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+}
+
+.shadow-glow-danger {
+	box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+}
+
+.shadow-card {
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-card-hover {
+	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Inner glow */
+.inner-shadow-glow {
+	box-shadow: inset 0 0 20px rgba(59, 130, 246, 0.1);
+}
+
+/* ==================== TRANSITIONS ==================== */
+
+.transition-all-smooth {
+	transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-transform-scale {
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-colors-smooth {
+	transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Hover lift effect */
+.hover-lift {
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Hover scale effect */
+.hover-scale {
+	transition: transform 0.3s ease;
+}
+
+.hover-scale:hover {
+	transform: scale(1.02);
+}
+
+/* Hover glow effect */
+.hover-glow {
+	transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+	box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+}
+
+/* ==================== ACCENT ICONS ==================== */
+
+.icon-accent {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.5rem;
+	padding: 0.25rem;
+}
+
+.icon-accent-primary {
+	background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+	color: #3b82f6;
+}
+
+.icon-accent-purple {
+	background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(217, 70, 239, 0.1));
+	color: #8b5cf6;
+}
+
+.icon-accent-green {
+	background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(6, 182, 212, 0.1));
+	color: #10b981;
+}
+
+.icon-accent-orange {
+	background: linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(245, 158, 11, 0.1));
+	color: #f97316;
+}
+
+.icon-accent-pink {
+	background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(217, 70, 239, 0.1));
+	color: #ec4899;
+}
+
+/* ==================== SPACING & PADDING ENHANCEMENTS ==================== */
+
+.p-section {
+	padding: 2rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+	.p-section {
+		padding: 3rem 2rem;
+	}
+}
+
+.p-card {
+	padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+	.p-card {
+		padding: 2rem;
+	}
+}
+
+/* ==================== BACKGROUND PATTERNS ==================== */
+
+.bg-dots {
+	background-image: radial-gradient(circle, rgba(59, 130, 246, 0.15) 1px, transparent 1px);
+	background-size: 20px 20px;
+}
+
+.bg-grid {
+	background-image: 
+		linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+	background-size: 40px 40px;
+}
+
+/* ==================== ANIMATED BORDER ==================== */
+
+.animated-border {
+	position: relative;
+}
+
+.animated-border::before {
+	content: '';
+	position: absolute;
+	inset: -2px;
+	background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+	background-size: 300% 100%;
+	border-radius: inherit;
+	z-index: -1;
+	animation: border-gradient 3s linear infinite;
+}
+
+@keyframes border-gradient {
+	0% { background-position: 0% 50%; }
+	100% { background-position: 300% 50%; }
+}
+
+/* ==================== BLUR EFFECTS ==================== */
+
+.blur-sm-light {
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+}
+
+.blur-md-light {
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.blur-lg-light {
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+}
+
+/* ==================== ROTATING ANIMATIONS ==================== */
+
+.spin-slow {
+	animation: spin 3s linear infinite;
+}
+
+.rotate-hover {
+	transition: transform 0.3s ease;
+}
+
+.rotate-hover:hover {
+	transform: rotate(5deg);
+}
+
+/* ==================== FADE ANIMATIONS ==================== */
+
+.fade-in {
+	animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+	from { opacity: 0; transform: translateY(10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+	animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-left {
+	animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+	from { opacity: 0; transform: translateX(-20px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+.slide-in-right {
+	animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+	from { opacity: 0; transform: translateX(20px); }
+	to { opacity: 1; transform: translateX(0); }
+}
+
+/* ==================== STAGGER ANIMATIONS ==================== */
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* ==================== PROGRESS BAR GRADIENTS ==================== */
+
+.progress-gradient-blue {
+	background: linear-gradient(90deg, #3b82f6, #06b6d4);
+}
+
+.progress-gradient-purple {
+	background: linear-gradient(90deg, #8b5cf6, #d946ef);
+}
+
+.progress-gradient-green {
+	background: linear-gradient(90deg, #10b981, #06b6d4);
+}
+
+.progress-gradient-orange {
+	background: linear-gradient(90deg, #f97316, #f59e0b);
+}
+
+/* ==================== BADGE STYLES ==================== */
+
+.badge-gradient {
+	background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+	color: white;
+}
+
+.badge-gradient-success {
+	background: linear-gradient(135deg, #10b981, #06b6d4);
+	color: white;
+}
+
+.badge-gradient-warning {
+	background: linear-gradient(135deg, #f59e0b, #f97316);
+	color: white;
+}
+
+.badge-gradient-danger {
+	background: linear-gradient(135deg, #ef4444, #dc2626);
+	color: white;
+}
+
+/* ==================== SCROLLBAR STYLING ==================== */
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(0, 0, 0, 0.05);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(59, 130, 246, 0.3);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(59, 130, 246, 0.5);
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+	background: rgba(255, 255, 255, 0.05);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+	background: rgba(139, 92, 246, 0.3);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+	background: rgba(139, 92, 246, 0.5);
+}
+
+/* Custom Scrollbar Utility Class */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: rgba(156, 163, 175, 0.3);
+	border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+	background: rgba(156, 163, 175, 0.5);
+}
+
+/* Animation Utilities */
+.animate-in {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  animation-fill-mode: forwards;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.zoom-in {
+  animation-name: zoomIn;
+}
+
+.slide-in-from-right-4 {
+  animation-name: slideInFromRight4;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInFromRight4 {
+  from { opacity: 0; transform: translateX(1rem); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromTop-2 {
+  from { opacity: 0; transform: translateY(-0.5rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in-from-top-2 {
+  animation-name: slideInFromTop-2;
+}
