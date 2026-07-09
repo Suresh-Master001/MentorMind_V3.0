@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { UserPlus, Mail, Lock, User as UserIcon, X, Plus, Users, Building2, Shield, Sparkles } from "lucide-react";
+import { UserPlus, Mail, Lock, User as UserIcon, X, Plus, Users, Building2, Shield, Sparkles, ChevronDown } from "lucide-react";
 
 const Logo = () => (
   <div className="flex items-center justify-center gap-3 mb-2">
