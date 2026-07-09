@@ -180,10 +180,11 @@ const Register = () => {
               </label>
               <div className="relative group">
                 <Shield className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-purple-500 transition-colors z-10" />
+                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-purple-500 transition-colors z-10 pointer-events-none" />
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="relative w-full pl-11 pr-4 py-3.5 bg-gray-50/80 dark:bg-gray-700/80 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 dark:focus:border-purple-500 transition-all appearance-none"
+                  className="relative w-full pl-11 pr-10 py-3.5 bg-gray-50/80 dark:bg-gray-700/80 border border-gray-200 dark:border-gray-600 rounded-xl text-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-400 dark:focus:border-purple-500 transition-all appearance-none cursor-pointer"
                 >
                   <option value="member">Team Member</option>
                   <option value="Team Lead">Team Lead</option>
